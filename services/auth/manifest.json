@@ -1,0 +1,13 @@
+{
+  "$schema": "http://json.schemastore.org/foxx-manifest",
+  "main": "dist/entry.js",
+  "engines": {
+    "arangodb": "^3.0.0"
+  },
+  "scripts": {
+    "setup": "dist/scripts/setup.js"
+  },
+  "name": "auth",
+  "version": "0.0.0",
+  "tests": "test/**/*.js"
+}

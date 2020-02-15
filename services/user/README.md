@@ -1,0 +1,1 @@
+# Foxx TypeScript Seed
