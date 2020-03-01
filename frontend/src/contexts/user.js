@@ -1,6 +1,6 @@
 import { useCookies } from 'react-cookie';
 import normalize from 'json-api-normalizer';
-import React, { useReducer, createContext } from 'react';
+import React, { useReducer, createContext, useCallback } from 'react';
 
 import ZuckAxios from 'config/axios';
 import { useEffect } from 'react';
@@ -8,21 +8,23 @@ import { useEffect } from 'react';
 const defaultState = {
   users: {},
   user: null,
-  isLoading: false,
+  isLoading: true,
 };
 
-const reducer = (state, action) => {
-  switch (action.type) {
+const reducer = (state, { type, payload }) => {
+  switch (type) {
     case 'setState':
-      return { ...action.payload, isLoading: false };
+      return { ...payload, isLoading: false };
     case 'loading':
-      return { ...state, isLoading: action.payload };
+      return { ...state, isLoading: payload };
     case 'logout':
-      return defaultState;
+      return { ...defaultState, isLoading: false };
     case 'setUser':
-      return { ...action.payload, isLoading: false };
+      return { ...payload, isLoading: false };
+    case 'updateUsers':
+      return { ...state, users: { ...state.users, ...payload.users } };
     default:
-      throw new Error(`unknown action type: ${action.type}`);
+      throw new Error(`unknown action type: ${type}`);
   }
 };
 
@@ -54,7 +56,7 @@ const UserContextProvider = ({ children }) => {
 
   useEffect(() => {
     if (cookie.sid) fetchUser();
-  }, [cookie]);
+  }, [cookie.sid]);
 
   const logIn = async ({ username, password }) => {
     const loginResult = await ZuckAxios.post('/auth/login', {
@@ -73,13 +75,25 @@ const UserContextProvider = ({ children }) => {
     dispatch({ type: 'logout' });
   };
 
+  const findUser = useCallback(
+    async username => {
+      const { data } = await ZuckAxios.get(`/user/${username}`);
+      const normalized = normalize(data);
+
+      dispatch({ type: 'updateUsers', payload: normalized });
+
+      return data;
+    },
+    [dispatch],
+  );
+
   // const whoami = async () => {
   //   const result = await ZuckAxios.get('/auth/whoami');
   //   console.log(result.data);
   // };
 
   return (
-    <UserContext.Provider value={{ state, logIn, logOut }}>
+    <UserContext.Provider value={{ state, logIn, logOut, findUser }}>
       {children}
     </UserContext.Provider>
   );

@@ -9,7 +9,7 @@ import Profile from 'containers/Profile';
 const ProtectedRoute = ({ component: Component, ...rest }) => {
   const { state } = useContext(UserContext);
 
-  if (!state.user) return <Redirect to="/login" />;
+  if (!state.user && !state.isLoading) return <Redirect to="/login" />;
 
   return <Route {...rest} component={Component} />;
 };
@@ -28,7 +28,7 @@ const App = () => {
           path="/"
           component={() => <Link to="/profile">Your Profile</Link>}
         />
-        <ProtectedRoute exact path="/profile" component={Profile} />
+        <ProtectedRoute path="/profile" component={Profile} />
       </Switch>
     </div>
   );
