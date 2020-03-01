@@ -1,9 +1,8 @@
 import createRouter from '@arangodb/foxx/router';
 
 import sessions from './sessions';
+import { pipe } from '../utils/compose';
 
-const Router = createRouter();
+const router: Foxx.Router = pipe(createRouter, sessions)();
 
-sessions(Router);
-
-export default Router;
+export default router;
