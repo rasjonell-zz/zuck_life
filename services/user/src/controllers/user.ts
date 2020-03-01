@@ -5,13 +5,7 @@ import { IRequest, IUser, IFollows } from '../interfaces';
 const User = db._collection('users');
 const Follows = db._collection('follows');
 
-/**
- * @param req the request object.
- * @returns `user` object with relationships
- */
-export function currentUser(req: IRequest): ArangoDB.Document<IUser> {
-  const user: ArangoDB.Document<IUser> = req.user;
-
+function userView(user: ArangoDB.Document<IUser>): ArangoDB.Document<IUser> {
   const followerEdges: ArangoDB.Edge<IFollows>[] = Follows.inEdges(user);
   const followingEdges: ArangoDB.Edge<IFollows>[] = Follows.outEdges(user);
 
@@ -26,6 +20,24 @@ export function currentUser(req: IRequest): ArangoDB.Document<IUser> {
   );
 
   return { ...user, followings, followers };
+}
+
+/**
+ * @param req the request object.
+ * @returns `user` object with relationships
+ */
+export function currentUser(req: IRequest): ArangoDB.Document<IUser> {
+  const user: ArangoDB.Document<IUser> = req.user;
+
+  return userView(user);
+}
+
+export function findUser(username: string): ArangoDB.Document<IUser> {
+  const user: ArangoDB.Document<IUser> = User.firstExample({
+    username,
+  });
+
+  return userView(user);
 }
 
 /**

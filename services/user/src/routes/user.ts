@@ -11,6 +11,18 @@ export default function user(Router: Foxx.Router): Foxx.Router {
     res.send(Serializer.serialize('users', user));
   });
 
+  Router.get('/:username', (req: IRequest, res: Foxx.Response): void => {
+    try {
+      const { username } = req.pathParams;
+      const user: ArangoDB.Document<IUser> = UserController.findUser(username);
+
+      res.send(Serializer.serialize('users', user));
+    } catch (error) {
+      // Assuming a user with that username was not found
+      res.throw('not found');
+    }
+  }).pathParam('username', joi.string().required(), 'username');
+
   Router.post('/follow', (req: IRequest, res: Foxx.Response): void => {
     try {
       const { username } = req.body;
