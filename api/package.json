@@ -1,0 +1,28 @@
+{
+  "name": "api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/entry.js",
+  "scripts": {
+    "start": "node -r dotenv/config dist/entry.js",
+    "watch": "nodemon",
+    "build": "tsc -p ."
+  },
+  "devDependencies": {
+    "@types/dotenv": "^8.2.0",
+    "@types/express": "^4.17.2",
+    "@types/http-proxy": "^1.17.3",
+    "@types/node": "^13.5.0",
+    "nodemon": "^2.0.2",
+    "tslint": "^6.0.0",
+    "typescript": "^3.7.5"
+  },
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "http-proxy": "^1.18.0"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
