@@ -4,10 +4,10 @@
 
 ```
 ├── README.md
-├── frontend (React - Typescript)
-├── API      (Something Lightweight - Typescript)
-└── services (Foxx  - Typescript)
-    ├── auth
+├── frontend (React         - Typescript)
+├── API      (Express/Proxy - Typescript)
+└── services (Foxx          - Typescript)
+    ├── auth (Sessions logic)
     ├── ...
-    └── user
+    └── user (followings, timelines, etc.)
 ```
