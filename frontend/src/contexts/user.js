@@ -1,9 +1,15 @@
 import { useCookies } from 'react-cookie';
 import normalize from 'json-api-normalizer';
-import React, { useReducer, createContext, useCallback } from 'react';
+import React, {
+  useEffect,
+  useContext,
+  useReducer,
+  useCallback,
+  createContext,
+} from 'react';
 
 import ZuckAxios from 'config/axios';
-import { useEffect } from 'react';
+import { PostsContext } from 'contexts/posts';
 
 const defaultState = {
   users: {},
@@ -32,14 +38,17 @@ const reducer = (state, { type, payload }) => {
 export const UserContext = createContext(defaultState);
 
 const UserContextProvider = ({ children }) => {
+  const { fetchPosts } = useContext(PostsContext);
+
   const [state, dispatch] = useReducer(reducer, defaultState);
   const [cookie, , removeCookie] = useCookies(['sid']);
 
-  const fetchUser = async () => {
+  const updateState = async () => {
     dispatch({ type: 'loading', payload: true });
 
     try {
       const { data } = await ZuckAxios.get('/user/');
+      fetchPosts();
 
       dispatch({
         type: 'setState',
@@ -56,7 +65,7 @@ const UserContextProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    if (cookie.sid) fetchUser();
+    if (cookie.sid) updateState();
   }, [cookie.sid]);
 
   const logIn = async ({ username, password }) => {
@@ -65,7 +74,7 @@ const UserContextProvider = ({ children }) => {
       password,
     });
 
-    fetchUser();
+    updateState();
   };
 
   const logOut = async () => {
@@ -80,7 +89,7 @@ const UserContextProvider = ({ children }) => {
       password,
     });
 
-    fetchUser();
+    updateState();
   };
 
   const findUser = useCallback(
@@ -101,7 +110,7 @@ const UserContextProvider = ({ children }) => {
       timelineKey: state.user.attributes.timeline,
     });
 
-    fetchUser();
+    updateState();
   };
 
   const editPost = async (postKey, body) => {
@@ -109,7 +118,7 @@ const UserContextProvider = ({ children }) => {
       body,
     });
 
-    fetchUser();
+    updateState();
   };
 
   const votePost = async (postKey, direction) => {
@@ -117,7 +126,15 @@ const UserContextProvider = ({ children }) => {
       direction,
     });
 
-    fetchUser();
+    updateState();
+  };
+
+  const follow = async username => {
+    await ZuckAxios.post('/user/follow/', {
+      username,
+    });
+
+    updateState();
   };
 
   return (
@@ -127,6 +144,7 @@ const UserContextProvider = ({ children }) => {
         logIn,
         logOut,
         signUp,
+        follow,
         findUser,
         editPost,
         votePost,

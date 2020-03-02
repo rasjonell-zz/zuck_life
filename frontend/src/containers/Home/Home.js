@@ -1,12 +1,12 @@
 import React, { useContext } from 'react';
 
+import { Spin } from 'antd';
+
 import Post from 'components/Post';
-import { UserContext } from 'contexts/user';
+import { PostsContext } from 'contexts/posts';
 
 export default () => {
-  const {
-    state: { posts },
-  } = useContext(UserContext);
+  const { posts, isLoading } = useContext(PostsContext);
 
   return (
     <div className="Home-root">
@@ -14,11 +14,13 @@ export default () => {
         <h1>Feed</h1>
       </div>
       <div className="Home-posts">
-        {Object.values(posts)
-          .reverse()
-          .map(post => (
-            <Post post={post} key={post.id} />
-          ))}
+        {isLoading ? (
+          <Spin size="large" />
+        ) : (
+          Object.values(posts)
+            .reverse()
+            .map(post => <Post post={post} key={post.id} />)
+        )}
       </div>
     </div>
   );

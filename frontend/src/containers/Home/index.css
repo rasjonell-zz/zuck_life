@@ -19,3 +19,21 @@
   flex-direction: column;
   justify-content: center;
 }
+
+@media only screen and (max-width: 1200px) {
+  .Home-root {
+    margin-left: 0px;
+  }
+
+  .Home-posts {
+    display: flex;
+    margin-top: 16px;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .Home-Header {
+    justify-content: center;
+  }
+}
