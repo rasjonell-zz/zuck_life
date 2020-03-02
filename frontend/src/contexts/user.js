@@ -69,7 +69,7 @@ const UserContextProvider = ({ children }) => {
   }, [cookie.sid]);
 
   const logIn = async ({ username, password }) => {
-    ZuckAxios.post('/auth/login', {
+    await ZuckAxios.post('/auth/login', {
       username,
       password,
     });
