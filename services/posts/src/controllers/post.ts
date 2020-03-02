@@ -2,6 +2,7 @@ import { db } from '@arangodb';
 
 import { IPost, IRequest, IHasVoted, IHasPosted, IUser } from '../interfaces';
 
+const User: ArangoDB.Collection = db._collection('users');
 const Post: ArangoDB.Collection = db._collection('posts');
 const HasVoted: ArangoDB.Collection = db._collection('has_voted');
 const HasPosted: ArangoDB.Collection = db._collection('has_posted');
@@ -16,6 +17,10 @@ export function postView(
     _to: post._id,
   });
 
+  const postedBy: string = isOwn
+    ? user.username
+    : User.document(HasVoted.firstExample({ _to: post._id })._from).username;
+
   const ownVote: ArangoDB.Document<IHasVoted> = HasVoted.firstExample({
     _from: user._id,
     _to: post._id,
@@ -28,7 +33,7 @@ export function postView(
     0,
   );
 
-  return { ...post, isOwn, ownVote, rating };
+  return { ...post, isOwn, ownVote, rating, postedBy };
 }
 
 /**
@@ -43,7 +48,11 @@ export function create(req: IRequest): ArangoDB.Document<IPost> {
 
   const createdAt: string = new Date().toISOString();
 
-  const postMeta: ArangoDB.InsertResult = Post.save({ body, createdAt });
+  const postMeta: ArangoDB.InsertResult = Post.save({
+    body,
+    createdAt,
+    updatedAt: createdAt,
+  });
 
   HasPosted.save({
     createdAt,
