@@ -1,0 +1,27 @@
+{
+  "name": "posts",
+  "version": "0.0.0",
+  "description": "Foxx TypeScript Service",
+  "main": "dist/entry.js",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "build": "tsc -p .",
+    "install:service": "npm run build && foxx install /posts --server dev --database zuck",
+    "upgrade:service": "npm run build && foxx upgrade /posts --server dev --database zuck",
+    "setup": "foxx server set dev http://localhost:8529 --database zuck && npm run install:service"
+  },
+  "devDependencies": {
+    "@types/arangodb": "^3.5.3",
+    "@types/joi": "^14.3.4",
+    "@types/lodash": "^4.14.149",
+    "@types/node": "^13.5.0",
+    "tslint": "^6.0.0",
+    "typescript": "^3.7.5"
+  },
+  "dependencies": {
+    "joi": "^14.3.1",
+    "json-api-serializer": "^2.3.0",
+    "lodash": "^4.17.15"
+  }
+}
