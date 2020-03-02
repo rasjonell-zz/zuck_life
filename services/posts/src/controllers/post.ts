@@ -1,9 +1,18 @@
-import { db } from '@arangodb';
+import { db, time } from '@arangodb';
 
-import { IPost, IRequest, IHasVoted, IHasPosted, IUser } from '../interfaces';
+import {
+  IPost,
+  IUser,
+  IRequest,
+  ITimeline,
+  IHasVoted,
+  IHasPosted,
+  IIsPostedIn,
+} from '../interfaces';
 
 const User: ArangoDB.Collection = db._collection('users');
 const Post: ArangoDB.Collection = db._collection('posts');
+const Timeline: ArangoDB.Collection = db._collection('timelines');
 const HasVoted: ArangoDB.Collection = db._collection('has_voted');
 const HasPosted: ArangoDB.Collection = db._collection('has_posted');
 const IsPostedIn: ArangoDB.Collection = db._collection('is_posted_in');
@@ -19,7 +28,7 @@ export function postView(
 
   const postedBy: string = isOwn
     ? user.username
-    : User.document(HasVoted.firstExample({ _to: post._id })._from).username;
+    : User.document(HasPosted.firstExample({ _to: post._id })._from).username;
 
   const ownVote: ArangoDB.Document<IHasVoted> = HasVoted.firstExample({
     _from: user._id,
@@ -34,6 +43,24 @@ export function postView(
   );
 
   return { ...post, isOwn, ownVote, rating, postedBy };
+}
+
+/**
+ * Looks at each timeline and returns its posts
+ *
+ * @param req The request object
+ * @returns all the posts in each timeline
+ */
+export function list(req: IRequest): ArangoDB.Document<IPost>[] {
+  const timelines: ArangoDB.Document<ITimeline>[] = Timeline.all().toArray();
+
+  return timelines.flatMap(
+    (timeline: ArangoDB.Document<ITimeline>): ArangoDB.Document<IPost>[] =>
+      IsPostedIn.inEdges(timeline).map(
+        (edge: ArangoDB.Edge<IIsPostedIn>): ArangoDB.Document<IPost> =>
+          postView(Post.document(edge._from), req.user),
+      ),
+  );
 }
 
 /**

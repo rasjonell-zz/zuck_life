@@ -50,6 +50,11 @@ export interface IHasPosted {
   updatedAt?: string;
 }
 
+export interface IIsPostedIn {
+  createdAt?: string;
+  updatedAt?: string;
+}
+
 export interface IHasVoted {
   direction?: -1 | 0 | 1;
   createdAt?: string;
