@@ -1,11 +1,12 @@
-import { Spin } from 'antd';
 import { Switch, Route, useParams } from 'react-router-dom';
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useCallback } from 'react';
+
+import { Spin } from 'antd';
 
 import { UserContext } from 'contexts/user';
 
 import UserProfile from './Profile';
-import { useCallback } from 'react';
+import './index.css';
 
 const GuestProfile = () => {
   const params = useParams();

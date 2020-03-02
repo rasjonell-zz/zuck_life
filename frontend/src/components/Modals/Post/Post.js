@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 
 import { Modal, Button, Input, Form } from 'antd';
 
@@ -15,39 +15,55 @@ const PostModal = () => {
   } = useContext(ModalsContext);
   const setPostModal = setModals({ type: 'post' });
 
-  const { createPost } = useContext(UserContext);
+  const { createPost, editPost } = useContext(UserContext);
 
   const [form] = useForm();
+
+  useEffect(() => {
+    if (post.open) form.resetFields();
+  }, [post.open, form]);
 
   const handleOk = async () => {
     const { body } = await form.validateFields();
 
     form.resetFields();
 
-    createPost(body);
-    setPostModal({ open: false });
+    if (post.isCreate) createPost(body);
+    else editPost(post.postToEdit.id, body);
+
+    setPostModal({ open: false, isCreate: true, postToEdit: null });
   };
 
   const handleCancel = () => {
-    setPostModal({ open: false });
+    form.resetFields();
+    setPostModal({ open: false, isCreate: true, postToEdit: null });
   };
 
   return (
     <Modal
+      destroyOnClose
+      confirmLoading
       onOk={handleOk}
       visible={post.open}
-      title="Compose a post."
       onCancel={handleCancel}
+      title={post.isCreate ? 'Compose a post.' : 'Edit your post'}
       footer={[
         <Button key="cancel" onClick={handleCancel}>
           Cancel
         </Button>,
         <Button key="submit" type="primary" onClick={handleOk}>
-          Submit
+          {post.isCreate ? 'Submit' : 'Edit'}
         </Button>,
       ]}
     >
-      <Form form={form} layout="vertical" name="form_in_modal">
+      <Form
+        form={form}
+        layout="vertical"
+        name="form_in_modal"
+        initialValues={{
+          body: post.isCreate ? '' : post.postToEdit.attributes.body,
+        }}
+      >
         <Form.Item
           name="body"
           rules={[

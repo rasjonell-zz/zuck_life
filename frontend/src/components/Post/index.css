@@ -1,11 +1,35 @@
 .Post-Card-root {
   width: 500px;
+  min-height: 150px;
   transition: box-shadow 0.5s;
-  transition: width 1s ease-out;
+  transition: width 0.5s;
   box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.05);
+  margin-bottom: 24px;
 }
 
-.Post-Card-root:hover {
+.Post-Card-root:active {
   width: 510px;
   box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
+}
+
+.Post-title {
+  display: flex;
+  justify-content: space-between;
+}
+
+.Post-title-date {
+  margin: 0;
+  margin-right: 16px;
+  padding: 0;
+  font-weight: lighter;
+  color: rgb(200, 200, 200);
+}
+
+.Post-rating {
+  font-size: 16px;
+}
+
+.Post-rating:hover {
+  cursor: default;
+  color: rgba(0, 0, 0, 0.45);
 }

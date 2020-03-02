@@ -1,19 +1,19 @@
-.Home-root {
+.Profile-root {
   margin-left: 48px;
 }
 
-.Home-Header {
+.Profile-Header {
   padding: 8px 16px;
   display: flex;
   align-items: center;
 }
 
-.Home-Header h1 {
+.Profile-Header h1 {
   margin: 0;
   margin-right: 8px;
 }
 
-.Home-posts {
+.Profile-posts {
   display: flex;
   margin-top: 16px;
   flex-direction: column;

@@ -4,6 +4,7 @@ const defaultState = {
   post: {
     open: false,
     isCreate: true,
+    postToEdit: null,
   },
 };
 

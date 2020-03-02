@@ -104,9 +104,34 @@ const UserContextProvider = ({ children }) => {
     fetchUser();
   };
 
+  const editPost = async (postKey, body) => {
+    await ZuckAxios.put(`/posts/${postKey}`, {
+      body,
+    });
+
+    fetchUser();
+  };
+
+  const votePost = async (postKey, direction) => {
+    await ZuckAxios.put(`/posts/${postKey}/vote`, {
+      direction,
+    });
+
+    fetchUser();
+  };
+
   return (
     <UserContext.Provider
-      value={{ state, logIn, logOut, findUser, signUp, createPost }}
+      value={{
+        state,
+        logIn,
+        logOut,
+        signUp,
+        findUser,
+        editPost,
+        votePost,
+        createPost,
+      }}
     >
       {children}
     </UserContext.Provider>

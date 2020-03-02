@@ -36,6 +36,7 @@ const NavMenu = () => {
           <span className="NavMenu-title">Profile</span>
         </span>
       </Menu.Item>
+      <Menu.Divider />
       <div className="NavMenu-last-item" onClick={openPostModal}>
         <Button size="large" type="primary" block icon={<EditOutlined />}>
           Post

@@ -5,16 +5,21 @@ import { UserContext } from 'contexts/user';
 
 export default () => {
   const {
-    state: { user, posts },
+    state: { posts },
   } = useContext(UserContext);
 
   return (
     <div className="Home-root">
-      {user.relationships.posts.data.map(postMeta => (
-        <div className="Home-Post-root">
-          <Post key={postMeta.id} post={posts[postMeta.id]} />
-        </div>
-      ))}
+      <div className="Home-Header">
+        <h1>Feed</h1>
+      </div>
+      <div className="Home-posts">
+        {Object.values(posts)
+          .reverse()
+          .map(post => (
+            <Post post={post} key={post.id} />
+          ))}
+      </div>
     </div>
   );
 };
