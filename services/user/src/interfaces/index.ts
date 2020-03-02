@@ -46,6 +46,17 @@ export interface IIsPostedIn {
   createdAt?: string;
 }
 
+export interface IHasPosted {
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface IHasVoted {
+  direction?: -1 | 0 | 1;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
 export interface IRequest extends Foxx.Request {
   _raw: Raw;
   user: ArangoDB.Document<IUser>;

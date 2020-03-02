@@ -7,6 +7,12 @@
   "scripts": {
     "setup": "dist/scripts/setup.js"
   },
+  "provides": {
+    "users": "0.0.0"
+  },
+  "dependencies": {
+    "posts": "posts:^0.0.0"
+  },
   "name": "user",
   "version": "0.0.0",
   "tests": "test/**/*.js"

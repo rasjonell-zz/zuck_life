@@ -10,6 +10,8 @@ import {
   IOwnsTimeline,
 } from '../interfaces';
 
+const { views } = module.context.dependencies.posts;
+
 const Follows: ArangoDB.Collection = db._collection('follows');
 const User: ArangoDB.Collection<IUser> = db._collection('users');
 const Post: ArangoDB.Collection<IPost> = db._collection('posts');
@@ -17,7 +19,9 @@ const IsPostedIn: ArangoDB.Collection = db._collection('is_posted_in');
 const OwnsTimeline: ArangoDB.Collection = db._collection('owns_timeline');
 const Timeline: ArangoDB.Collection<ITimeline> = db._collection('timelines');
 
-function userView(user: ArangoDB.Document<IUser>): ArangoDB.Document<IUser> {
+export function userView(
+  user: ArangoDB.Document<IUser>,
+): ArangoDB.Document<IUser> {
   const followerEdges: ArangoDB.Edge<IFollows>[] = Follows.inEdges(user);
   const followingEdges: ArangoDB.Edge<IFollows>[] = Follows.outEdges(user);
   const timelineEdges: ArangoDB.Edge<IOwnsTimeline>[] = OwnsTimeline.outEdges(
@@ -42,7 +46,7 @@ function userView(user: ArangoDB.Document<IUser>): ArangoDB.Document<IUser> {
 
   const posts: ArangoDB.Document<IPost>[] = postsEdges.map(
     (edge: ArangoDB.Edge<IIsPostedIn>): ArangoDB.Document<IPost> =>
-      Post.document(edge._from),
+      views.postView(Post.document(edge._from), user),
   );
 
   return { ...user, followings, followers, posts, timeline: timeline._key };
