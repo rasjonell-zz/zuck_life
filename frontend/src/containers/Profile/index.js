@@ -1,3 +1,4 @@
+import { Spin } from 'antd';
 import { Switch, Route, useParams } from 'react-router-dom';
 import React, { useState, useEffect, useContext } from 'react';
 
@@ -25,7 +26,7 @@ const GuestProfile = () => {
 
   if (!isGuest) return <UserProfile isGuest={false} />;
 
-  if (!guest) return <h4>Loading...</h4>;
+  if (!guest) return <Spin />;
 
   return <UserProfile isGuest guest={guest} />;
 };

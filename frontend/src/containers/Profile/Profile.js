@@ -1,6 +1,8 @@
 import React, { useContext } from 'react';
 import { useHistory } from 'react-router-dom';
 
+import { Button } from 'antd';
+
 import { UserContext } from 'contexts/user';
 
 const Profile = ({ guest, isGuest }) => {
@@ -18,7 +20,11 @@ const Profile = ({ guest, isGuest }) => {
       <h1>
         {isGuest ? guest.attributes.username : state.user.attributes.username}
       </h1>
-      <button onClick={handleLogOut}>Fuck Off!</button>
+      {!isGuest && (
+        <Button type="primary" onClick={handleLogOut}>
+          Log Out!
+        </Button>
+      )}
     </div>
   );
 };
