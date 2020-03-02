@@ -4,6 +4,8 @@ import Auth from '../utils/auth';
 import { IRequest, IUser } from '../interfaces';
 
 const User = db._collection('users');
+const Timeline = db._collection('timelines');
+const OwnsTimeline = db._collection('owns_timeline');
 
 /**
  * Validates given credentials and
@@ -51,7 +53,15 @@ export function signUp(
     authData,
   };
 
-  const userMeta = User.save(user);
+  const userMeta: ArangoDB.InsertResult = User.save(user);
+  const timelineMeta: ArangoDB.InsertResult = Timeline.save({
+    createdAt: new Date().toISOString(),
+  });
+
+  OwnsTimeline.save({
+    _from: userMeta._id,
+    _to: timelineMeta._id,
+  });
 
   req.session.uid = userMeta._key;
   req.sessionStorage.save(req.session);
