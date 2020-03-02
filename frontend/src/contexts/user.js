@@ -7,6 +7,7 @@ import { useEffect } from 'react';
 
 const defaultState = {
   users: {},
+  posts: {},
   user: null,
   isLoading: true,
 };
@@ -19,10 +20,10 @@ const reducer = (state, { type, payload }) => {
       return { ...state, isLoading: payload };
     case 'logout':
       return { ...defaultState, isLoading: false };
-    case 'setUser':
-      return { ...payload, isLoading: false };
     case 'updateUsers':
       return { ...state, users: { ...state.users, ...payload.users } };
+    case 'updatePosts':
+      return { ...state, posts: { ...state.posts, ...payload.posts } };
     default:
       throw new Error(`unknown action type: ${type}`);
   }
@@ -59,12 +60,10 @@ const UserContextProvider = ({ children }) => {
   }, [cookie.sid]);
 
   const logIn = async ({ username, password }) => {
-    const loginResult = await ZuckAxios.post('/auth/login', {
+    ZuckAxios.post('/auth/login', {
       username,
       password,
     });
-
-    console.log(loginResult);
 
     fetchUser();
   };
@@ -73,6 +72,15 @@ const UserContextProvider = ({ children }) => {
     ZuckAxios.post('/auth/logout');
     removeCookie('sid');
     dispatch({ type: 'logout' });
+  };
+
+  const signUp = async ({ username, password }) => {
+    await ZuckAxios.post('/auth/signup', {
+      username,
+      password,
+    });
+
+    fetchUser();
   };
 
   const findUser = useCallback(
@@ -87,13 +95,19 @@ const UserContextProvider = ({ children }) => {
     [dispatch],
   );
 
-  // const whoami = async () => {
-  //   const result = await ZuckAxios.get('/auth/whoami');
-  //   console.log(result.data);
-  // };
+  const createPost = async body => {
+    await ZuckAxios.post('/posts/', {
+      body,
+      timelineKey: state.user.attributes.timeline,
+    });
+
+    fetchUser();
+  };
 
   return (
-    <UserContext.Provider value={{ state, logIn, logOut, findUser }}>
+    <UserContext.Provider
+      value={{ state, logIn, logOut, findUser, signUp, createPost }}
+    >
       {children}
     </UserContext.Provider>
   );

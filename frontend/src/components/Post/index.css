@@ -1,0 +1,11 @@
+.Post-Card-root {
+  width: 500px;
+  transition: box-shadow 0.5s;
+  transition: width 1s ease-out;
+  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.05);
+}
+
+.Post-Card-root:hover {
+  width: 510px;
+  box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
+}
