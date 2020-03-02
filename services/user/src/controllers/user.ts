@@ -1,4 +1,4 @@
-import { db, time } from '@arangodb';
+import { db, query } from '@arangodb';
 
 import {
   IUser,
@@ -49,7 +49,31 @@ export function userView(
       views.postView(Post.document(edge._from), user),
   );
 
-  return { ...user, followings, followers, posts, timeline: timeline._key };
+  const suggestions = query`
+    LET user = DOCUMENT(${user._id})
+
+    FOR v, e, p IN 2..2 OUTBOUND user follows
+      FILTER v.username != user.username
+
+      COLLECT id = v._id INTO names
+
+      let numberOfOccurrences = LENGTH(names)
+
+      SORT numberOfOccurrences DESC
+
+      let suggestedUser = DOCUMENT(id)
+
+      RETURN suggestedUser.username
+  `.toArray();
+
+  return {
+    ...user,
+    posts,
+    followers,
+    followings,
+    suggestions,
+    timeline: timeline._key,
+  };
 }
 
 /**
