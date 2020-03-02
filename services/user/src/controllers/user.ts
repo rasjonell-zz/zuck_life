@@ -1,13 +1,28 @@
-import { db } from '@arangodb';
+import { db, time } from '@arangodb';
 
-import { IRequest, IUser, IFollows } from '../interfaces';
+import {
+  IUser,
+  IPost,
+  IFollows,
+  IRequest,
+  ITimeline,
+  IIsPostedIn,
+  IOwnsTimeline,
+} from '../interfaces';
 
-const User = db._collection('users');
-const Follows = db._collection('follows');
+const Follows: ArangoDB.Collection = db._collection('follows');
+const User: ArangoDB.Collection<IUser> = db._collection('users');
+const Post: ArangoDB.Collection<IPost> = db._collection('posts');
+const IsPostedIn: ArangoDB.Collection = db._collection('is_posted_in');
+const OwnsTimeline: ArangoDB.Collection = db._collection('owns_timeline');
+const Timeline: ArangoDB.Collection<ITimeline> = db._collection('timelines');
 
 function userView(user: ArangoDB.Document<IUser>): ArangoDB.Document<IUser> {
   const followerEdges: ArangoDB.Edge<IFollows>[] = Follows.inEdges(user);
   const followingEdges: ArangoDB.Edge<IFollows>[] = Follows.outEdges(user);
+  const timelineEdges: ArangoDB.Edge<IOwnsTimeline>[] = OwnsTimeline.outEdges(
+    user,
+  );
 
   const followers: ArangoDB.Document<IUser>[] = followerEdges.map(
     (edge: ArangoDB.Edge<IFollows>): ArangoDB.Document<IUser> =>
@@ -19,7 +34,18 @@ function userView(user: ArangoDB.Document<IUser>): ArangoDB.Document<IUser> {
       User.document(edge._to),
   );
 
-  return { ...user, followings, followers };
+  const timeline: ArangoDB.Document<ITimeline> = Timeline.document(
+    timelineEdges[0]._to,
+  );
+
+  const postsEdges: ArangoDB.Edge<IIsPostedIn>[] = IsPostedIn.inEdges(timeline);
+
+  const posts: ArangoDB.Document<IPost>[] = postsEdges.map(
+    (edge: ArangoDB.Edge<IIsPostedIn>): ArangoDB.Document<IPost> =>
+      Post.document(edge._from),
+  );
+
+  return { ...user, followings, followers, posts, timeline: timeline._key };
 }
 
 /**

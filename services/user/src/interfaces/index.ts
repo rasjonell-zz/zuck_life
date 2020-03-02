@@ -26,7 +26,23 @@ export interface ISession {
   expires?: string;
 }
 
+export interface IPost {
+  body?: string;
+}
+
+export interface ITimeline {
+  createdAt?: string;
+}
+
 export interface IFollows {
+  createdAt?: string;
+}
+
+export interface IOwnsTimeline {
+  createdAt?: string;
+}
+
+export interface IIsPostedIn {
   createdAt?: string;
 }
 
