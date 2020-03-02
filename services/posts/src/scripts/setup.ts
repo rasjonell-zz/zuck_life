@@ -1,7 +1,7 @@
 import { db } from '@arangodb';
 
 const collections: string[] = ['posts'];
-const edges: string[] = ['has_posted', 'is_posted_in'];
+const edges: string[] = ['has_posted', 'is_posted_in', 'has_voted'];
 
 collections.forEach((collection: string): void => {
   if (!db._collection(collection)) {
@@ -23,8 +23,15 @@ edges.forEach((edge: string): void => {
   }
 });
 
+const HasVoted: ArangoDB.Collection = db._collection('has_voted');
 const HasPosted: ArangoDB.Collection = db._collection('has_posted');
 const IsPostedIn: ArangoDB.Collection = db._collection('is_posted_in');
+
+HasVoted.ensureIndex({
+  type: 'hash',
+  unique: true,
+  fields: ['_from', '_to'],
+});
 
 HasPosted.ensureIndex({
   type: 'hash',

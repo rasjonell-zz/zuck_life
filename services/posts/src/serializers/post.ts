@@ -1,4 +1,4 @@
 export default {
   id: '_key',
-  blacklist: ['_key', '_id', '_rev'],
+  blacklist: ['_key', '_id', '_rev', '_oldRev'],
 };

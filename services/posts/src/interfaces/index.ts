@@ -21,6 +21,9 @@ export interface IUser {
 
 export interface IPost {
   body?: string;
+  isOwn?: boolean;
+  rating?: number;
+  ownVote?: IHasVoted;
 }
 
 export interface ISession {
@@ -40,6 +43,17 @@ export interface IFollows {
 
 export interface IOwnsTimeline {
   createdAt?: string;
+}
+
+export interface IHasPosted {
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface IHasVoted {
+  direction?: -1 | 0 | 1;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface IRequest extends Foxx.Request {
