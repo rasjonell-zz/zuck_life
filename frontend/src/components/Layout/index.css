@@ -1,0 +1,17 @@
+.Layout-root {
+  display: flex;
+  height: 100vh;
+}
+
+.Layout-NavMenu {
+  height: 100%;
+  width: 150px;
+  overflow-y: scroll;
+}
+
+.Layout-Main {
+  height: 100%;
+  width: 100%;
+  padding: 16px;
+  overflow-y: scroll;
+}

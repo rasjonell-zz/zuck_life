@@ -1,0 +1,14 @@
+.NavMenu-root {
+  height: 100%;
+}
+
+.NavMenu-title {
+  font-size: large;
+}
+
+.NavMenu-last-item {
+  width: 100%;
+  display: flex;
+  margin-top: 16px;
+  justify-content: center;
+}
