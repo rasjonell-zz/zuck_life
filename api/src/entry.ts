@@ -27,6 +27,7 @@ const proxyResult = async (
 App.use(corsMiddleware)
   .all('/auth/*', proxyResult)
   .all('/user/*', proxyResult)
+  .all('/posts/*', proxyResult)
   .all('/*', (_req, res): void => {
     res.status(404).json({
       data: null,
