@@ -135,7 +135,11 @@ export function vote(req: IRequest): ArangoDB.Document<IPost> {
   const createdAt: string = new Date().toISOString();
   const updatedAt: string = createdAt;
 
-  if (vote) HasVoted.update(vote, { direction, updatedAt });
+  if (vote)
+    HasVoted.update(vote, {
+      updatedAt,
+      direction: vote.direction === direction ? 0 : direction,
+    });
   else
     HasVoted.save({
       direction,
