@@ -71,6 +71,7 @@ const Login = ({ isSignUp }) => {
                 <Button
                   type="primary"
                   htmlType="submit"
+                  loading={state.isLoading}
                   className="login-form-button"
                 >
                   {isSignUp ? 'Sign Up!' : 'Login'}
