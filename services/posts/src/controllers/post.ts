@@ -6,7 +6,6 @@ import {
   IRequest,
   ITimeline,
   IHasVoted,
-  IHasPosted,
   IIsPostedIn,
 } from '../interfaces';
 
