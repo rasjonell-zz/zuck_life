@@ -1,5 +1,6 @@
 import { useCookies } from 'react-cookie';
 import normalize from 'json-api-normalizer';
+import { useHistory } from 'react-router-dom';
 import React, {
   useEffect,
   useContext,
@@ -38,6 +39,7 @@ const reducer = (state, { type, payload }) => {
 export const UserContext = createContext(defaultState);
 
 const UserContextProvider = ({ children }) => {
+  const history = useHistory();
   const { fetchPosts } = useContext(PostsContext);
 
   const [state, dispatch] = useReducer(reducer, defaultState);
@@ -58,7 +60,10 @@ const UserContextProvider = ({ children }) => {
         },
       });
     } catch (error) {
-      // do smth
+      if (error.response.status === 401) {
+        dispatch({ type: 'loading', payload: false });
+        history.push('/login');
+      }
     }
 
     dispatch({ type: 'loading', payload: false });

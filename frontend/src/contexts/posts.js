@@ -1,4 +1,5 @@
 import normalize from 'json-api-normalizer';
+import { useHistory } from 'react-router-dom';
 import React, {
   useEffect,
   useReducer,
@@ -27,15 +28,23 @@ const reducer = (state, { type, payload }) => {
 export const PostsContext = createContext(defaultState);
 
 const PostsContextProvider = ({ children }) => {
+  const history = useHistory();
   const [state, dispatch] = useReducer(reducer, defaultState);
 
   const fetchPosts = useCallback(async () => {
     dispatch({ type: 'setLoading', payload: true });
 
-    const { data } = await ZuckAxios.get('/posts/');
+    try {
+      const { data } = await ZuckAxios.get('/posts/');
 
-    dispatch({ type: 'updateAll', payload: normalize(data) });
-  }, [dispatch]);
+      dispatch({ type: 'updateAll', payload: normalize(data) });
+    } catch (error) {
+      if (error.response.status === 401) {
+        dispatch({ type: 'setLoading', payload: false });
+        history.push('/login');
+      }
+    }
+  }, [history, dispatch]);
 
   useEffect(() => {
     fetchPosts();

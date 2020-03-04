@@ -28,7 +28,7 @@ const Login = ({ isSignUp }) => {
             className={clsx('Profile-Background', {
               SignUp: isSignUp,
             })}
-          ></div>
+          />
         </Col>
         <Col md={8} sm={12} xs={24}>
           <div className="Profile-Form">
@@ -71,7 +71,6 @@ const Login = ({ isSignUp }) => {
                 <Button
                   type="primary"
                   htmlType="submit"
-                  loading={state.isLoading}
                   className="login-form-button"
                 >
                   {isSignUp ? 'Sign Up!' : 'Login'}
