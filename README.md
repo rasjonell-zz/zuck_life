@@ -16,12 +16,13 @@ For more information you can:
 
 ```
 ├── README.md
-├── frontend (React         - Javascript)
-├── API      (Express/Proxy - Typescript)
-└── services (Foxx          - Typescript)
-    ├── auth  (Sessions logic)
-    ├── posts (Posts, comments, ratings)
-    └── user  (Followings, timelines, etc.)
+├── frontend  ( React         - Javascript )
+├── API       ( Express/Proxy - Typescript )
+└── services  ( Foxx          - Typescript )
+    |
+    ├── auth  ( Sessions logic, User creation )
+    ├── posts ( Posts, comments, ratings      )
+    └── user  ( Followings, timelines, etc.   )
 ```
 
 ## Running The App
